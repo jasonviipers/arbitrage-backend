@@ -6,6 +6,9 @@ from fastapi import HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.core.config import settings
 import logging
+from app.models.events import User
+from app.core.database import AsyncSessionLocal
+from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 
@@ -93,13 +96,21 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
                 detail="Could not validate credentials"
             )
         
-        # In a real application, you would fetch user from database
-        # For now, return a mock user object
+        async with AsyncSessionLocal() as session:
+            result = await session.execute(select(User).where(User.id == user_id))
+            user = result.scalars().first()
+
+            if user is None:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="User not found"
+                )
+
         return {
-            "id": user_id,
-            "email": payload.get("email"),
-            "is_active": True,
-            "permissions": payload.get("permissions", [])
+            "id":str(user.id),
+            "email": user.email,
+            "is_active": user.is_active,
+            "permissions": user.permissions
         }
         
     except HTTPException:
