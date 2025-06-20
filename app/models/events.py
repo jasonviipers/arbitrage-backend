@@ -15,7 +15,7 @@ class Event(Base):
     teams = Column(JSON, nullable=False)
     commence_time = Column(DateTime(timezone=True), nullable=False, index=True)
     status = Column(String, default="upcoming", index=True)
-    metadata = Column(JSON, default=dict)
+    metadata_ = Column(JSON, default=dict)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     

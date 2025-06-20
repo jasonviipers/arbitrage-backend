@@ -7,8 +7,8 @@ sqlalchemy[asyncio]>=2.0.23
 asyncpg>=0.29.0
 alembic>=1.12.1
 
-# Redis - explicitly set minimum version compatible with celery[redis]
-redis[hiredis]>=5.0.1,<5.0.0  # Celery 5.3.4 requires redis<5.0.0
+# Redis - compatible avec celery[redis]
+redis[hiredis]>=4.5.5,<5.0.0  # Celery 5.3.4 supporte redis-py < 5.0.0
 
 # Authentication and security
 python-jose[cryptography]>=3.3.0
